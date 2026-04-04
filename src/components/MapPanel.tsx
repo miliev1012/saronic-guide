@@ -4,7 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { spots } from '../data/places';
 import { ISLAND_META, CATEGORY_META } from '../data/types';
-import type { Island, Category, Spot } from '../data/types';
+import type { Island, Category, Vibe, Spot } from '../data/types';
 
 function makeIcon(emoji: string, color: string) {
   return L.divIcon({
@@ -38,14 +38,17 @@ function BoundsAdjuster({ visible }: { visible: Spot[] }) {
 interface Props {
   activeIsland: Island | 'all';
   activeCategory: Category | 'all';
+  activeVibe?: Vibe | 'all';
   onSpotClick?: (spot: Spot) => void;
 }
 
-export default function MapPanel({ activeIsland, activeCategory, onSpotClick }: Props) {
-  const visible = spots.filter(s =>
-    (activeIsland === 'all' || s.island === activeIsland) &&
-    (activeCategory === 'all' || s.category === activeCategory)
-  );
+export default function MapPanel({ activeIsland, activeCategory, activeVibe = 'all', onSpotClick }: Props) {
+  const visible = spots.filter(s => {
+    if (activeIsland !== 'all' && s.island !== activeIsland) return false;
+    if (activeCategory !== 'all' && s.category !== activeCategory) return false;
+    if (activeVibe !== 'all' && !(s.vibes?.includes(activeVibe))) return false;
+    return true;
+  });
 
   const handleMarkerClick = useCallback((spot: Spot) => {
     if (onSpotClick) onSpotClick(spot);
@@ -54,7 +57,7 @@ export default function MapPanel({ activeIsland, activeCategory, onSpotClick }: 
   return (
     <div className="map-wrap">
       <MapContainer
-        center={[37.4, 23.35]}
+        center={[37.45, 23.30]}
         zoom={10}
         style={{ width: '100%', height: '100%' }}
         scrollWheelZoom={true}
@@ -87,8 +90,9 @@ export default function MapPanel({ activeIsland, activeCategory, onSpotClick }: 
                       <span className="popup-musttry-label">Must try:</span> {spot.mustTry}
                     </div>
                   )}
-                  {spot.tip && (
-                    <div className="popup-tip">💡 {spot.tip}</div>
+                  {spot.tip && <div className="popup-tip">💡 {spot.tip}</div>}
+                  {spot.depth && (
+                    <div className="popup-depth">⚓ {spot.depth} · {spot.bottom}</div>
                   )}
                   <div className="popup-tags">
                     {spot.anchor && <span className="popup-tag anchor">⚓ Anchorage</span>}

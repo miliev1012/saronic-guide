@@ -1,12 +1,14 @@
-import { ISLAND_META, CATEGORY_META } from '../data/types';
+import { ISLAND_META, CATEGORY_META, VIBE_META } from '../data/types';
 import type { Spot } from '../data/types';
 
 interface Props {
   spot: Spot;
+  isFavorite?: boolean;
+  onToggleFavorite?: (id: string) => void;
   onFocus?: (spot: Spot) => void;
 }
 
-export default function SpotCard({ spot, onFocus }: Props) {
+export default function SpotCard({ spot, isFavorite = false, onToggleFavorite, onFocus }: Props) {
   const catMeta = CATEGORY_META[spot.category];
   const islMeta = ISLAND_META[spot.island];
 
@@ -25,6 +27,15 @@ export default function SpotCard({ spot, onFocus }: Props) {
             </span>
           </div>
         </div>
+        {onToggleFavorite && (
+          <button
+            className={`spot-fav-btn${isFavorite ? ' saved' : ''}`}
+            onClick={() => onToggleFavorite(spot.id)}
+            title={isFavorite ? 'Remove from saved' : 'Save spot'}
+          >
+            {isFavorite ? '❤️' : '🤍'}
+          </button>
+        )}
       </div>
 
       <p className="spot-desc">{spot.desc}</p>
@@ -40,10 +51,30 @@ export default function SpotCard({ spot, onFocus }: Props) {
         <div className="spot-tip">💡 {spot.tip}</div>
       )}
 
+      {(spot.depth || spot.bottom) && (
+        <div className="spot-depth">
+          {spot.anchor && <span>⚓</span>}
+          {spot.depth && <span>{spot.depth} depth</span>}
+          {spot.bottom && <span>· {spot.bottom}</span>}
+        </div>
+      )}
+
+      {spot.vibes && spot.vibes.length > 0 && (
+        <div className="spot-vibes">
+          {spot.vibes.map(v => {
+            const vm = VIBE_META[v];
+            return (
+              <span key={v} className="vibe-tag" style={{ background: vm.bg, color: vm.color }}>
+                {vm.label}
+              </span>
+            );
+          })}
+        </div>
+      )}
+
       <div className="spot-footer">
         <div className="spot-tags">
-          {spot.anchor && <span className="spot-tag">⚓ Good anchorage</span>}
-          {spot.swim && <span className="spot-tag">🏊 Great swimming</span>}
+          {spot.swim && <span className="spot-tag">🏊 Swimming</span>}
         </div>
         <button
           className="spot-map-btn"
