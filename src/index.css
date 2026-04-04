@@ -1,0 +1,971 @@
+/* ─── Google Fonts ─────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap');
+
+/* ─── CSS Variables ─────────────────────────────────────── */
+:root {
+  --navy:      #0d2137;
+  --navy-mid:  #163050;
+  --sea:       #0077b6;
+  --turquoise: #00b4d8;
+  --foam:      #90e0ef;
+  --sand:      #f4d58d;
+  --sand-dark: #d4a843;
+  --surface:   #f5f9fc;
+  --white:     #ffffff;
+  --text:      #1a2e3d;
+  --text-mid:  #4a6075;
+  --text-light:#7a96a8;
+  --border:    #d0e4ee;
+  --radius:    12px;
+  --shadow:    0 2px 16px rgba(0,60,100,0.10);
+  --shadow-lg: 0 8px 32px rgba(0,60,100,0.16);
+}
+
+/* ─── Reset & Base ──────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--surface);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+#root { min-height: 100vh; }
+
+/* ─── App Shell ─────────────────────────────────────────── */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ─── Hero ──────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  background: var(--navy);
+  padding: 56px 24px 80px;
+  overflow: hidden;
+  text-align: center;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 30% 0%, rgba(0,119,182,0.4) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 80% 100%, rgba(0,180,216,0.25) 0%, transparent 70%);
+}
+
+/* subtle water texture */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 14px,
+    rgba(255,255,255,0.025) 14px,
+    rgba(255,255,255,0.025) 15px
+  );
+}
+
+.hero-content { position: relative; z-index: 1; }
+
+.hero-eyebrow {
+  display: inline-block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--turquoise);
+  background: rgba(0,180,216,0.12);
+  border: 1px solid rgba(0,180,216,0.3);
+  padding: 6px 16px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 6vw, 68px);
+  font-weight: 900;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+
+.hero-subtitle {
+  font-size: clamp(14px, 2vw, 18px);
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.04em;
+  margin-bottom: 32px;
+}
+
+.hero-stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 100px;
+  padding: 10px 28px;
+  gap: 24px;
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.hs-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--sand);
+  line-height: 1;
+}
+
+.hs-label {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hero-stat-div {
+  width: 1px;
+  height: 32px;
+  background: rgba(255,255,255,0.2);
+}
+
+.hero-waves {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px;
+  line-height: 0;
+}
+
+.hero-waves svg { width: 100%; height: 100%; }
+
+/* ─── Filter Bar ────────────────────────────────────────── */
+.filter-wrap {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+}
+
+.filter-bar {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-light);
+  min-width: 60px;
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filter-pill {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  color: var(--text-mid);
+  border-radius: 100px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.filter-pill:hover {
+  border-color: var(--sea);
+  color: var(--sea);
+}
+
+.filter-pill.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+
+.filter-pill.island-active,
+.filter-pill.cat-active {
+  color: var(--white) !important;
+}
+
+/* ─── Tab Nav ───────────────────────────────────────────── */
+.tab-nav {
+  background: var(--white);
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  padding: 0 16px;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  gap: 4px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tab-nav::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  padding: 14px 18px 11px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-mid);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: -2px;
+}
+
+.tab-btn:hover { color: var(--sea); }
+
+.tab-btn.active {
+  color: var(--sea);
+  border-bottom-color: var(--sea);
+  font-weight: 600;
+}
+
+.tab-count {
+  background: var(--sea);
+  color: white;
+  border-radius: 100px;
+  font-size: 11px;
+  padding: 1px 7px;
+  font-weight: 700;
+}
+
+/* ─── Main ──────────────────────────────────────────────── */
+.main {
+  flex: 1;
+  max-width: 100%;
+}
+
+/* ─── Map Section ───────────────────────────────────────── */
+.map-section {
+  height: calc(100vh - 260px);
+  min-height: 420px;
+}
+
+.map-wrap {
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── Leaflet Popup ─────────────────────────────────────── */
+.saronic-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: none;
+  box-shadow: var(--shadow-lg);
+  min-width: 260px;
+  max-width: 300px;
+}
+
+.saronic-popup .leaflet-popup-content {
+  margin: 0;
+  width: 100% !important;
+}
+
+.saronic-popup .leaflet-popup-tip-container { margin-top: -1px; }
+
+.popup-content { font-family: 'DM Sans', sans-serif; }
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  color: white;
+}
+
+.popup-emoji {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.popup-name {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+.popup-island {
+  font-size: 11px;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.popup-body {
+  padding: 12px 14px;
+  background: white;
+}
+
+.popup-desc {
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.popup-musttry {
+  font-size: 12px;
+  background: #fff8e7;
+  border-left: 3px solid var(--sand-dark);
+  padding: 6px 8px;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.popup-musttry-label {
+  font-weight: 600;
+  color: var(--sand-dark);
+}
+
+.popup-tip {
+  font-size: 11px;
+  color: var(--text-mid);
+  background: var(--surface);
+  padding: 6px 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.popup-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.popup-tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-weight: 600;
+}
+
+.popup-tag.anchor { background: #e8eff2; color: #264653; }
+.popup-tag.swim { background: #e0f4fa; color: #0096c7; }
+.popup-tag.cat { border: 1px solid currentColor; }
+
+.popup-maps-link {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sea);
+  text-decoration: none;
+  padding: 6px;
+  border: 1.5px solid var(--sea);
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+
+.popup-maps-link:hover {
+  background: var(--sea);
+  color: white;
+}
+
+/* ─── List Section ──────────────────────────────────────── */
+.list-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.list-search-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.search-input {
+  flex: 1;
+  max-width: 380px;
+  padding: 10px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.search-input:focus { border-color: var(--sea); }
+
+.list-count {
+  font-size: 13px;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.list-island-group { margin-bottom: 36px; }
+
+.list-island-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border);
+}
+
+.list-island-heading::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 24px;
+  background: var(--isl-color, var(--sea));
+  border-radius: 2px;
+}
+
+.list-isl-count {
+  font-size: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  color: var(--text-light);
+  margin-left: auto;
+}
+
+/* ─── Spots Grid ────────────────────────────────────────── */
+.spots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+/* ─── Spot Card ─────────────────────────────────────────── */
+.spot-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.spot-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--cat-color, var(--sea));
+}
+
+.spot-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+  border-color: var(--border);
+}
+
+.spot-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.spot-emoji {
+  font-size: 26px;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.spot-header-text { flex: 1; min-width: 0; }
+
+.spot-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.spot-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.spot-island-badge,
+.spot-cat-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 100px;
+  color: white;
+  white-space: nowrap;
+}
+
+.spot-cat-badge {
+  color: var(--cat-color, var(--sea)) !important;
+}
+
+.spot-desc {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.55;
+}
+
+.spot-musttry {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  font-size: 12px;
+  background: #fff8e7;
+  border-left: 3px solid var(--sand-dark);
+  padding: 8px 10px;
+  border-radius: 0 6px 6px 0;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.spot-musttry-icon { flex-shrink: 0; }
+
+.spot-tip {
+  font-size: 12px;
+  background: var(--surface);
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+
+.spot-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 4px;
+}
+
+.spot-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.spot-tag {
+  font-size: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-mid);
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-weight: 500;
+}
+
+.spot-map-btn {
+  background: none;
+  border: 1.5px solid var(--sea);
+  color: var(--sea);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  padding: 5px 12px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.spot-map-btn:hover {
+  background: var(--sea);
+  color: white;
+}
+
+/* ─── Island Guide ──────────────────────────────────────── */
+.island-guide {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+.island-guide-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.ig-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 900;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.ig-subtitle {
+  color: var(--text-mid);
+  font-size: 15px;
+}
+
+/* Route strip */
+.route-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 36px;
+  background: var(--navy);
+  border-radius: 100px;
+  padding: 12px 24px;
+}
+
+.route-step {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.route-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+}
+
+.route-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+}
+
+.route-arrow {
+  font-size: 16px;
+  margin: 0 4px;
+  opacity: 0.6;
+}
+
+/* Island cards grid */
+.island-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.island-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: all 0.2s;
+}
+
+.island-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.island-card-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  color: white;
+}
+
+.island-big-emoji { font-size: 28px; }
+
+.island-card-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.island-card-sailing {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-top: 3px;
+}
+
+.island-card-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.island-card-desc {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.55;
+}
+
+.island-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.island-stat {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-mid);
+  background: var(--surface);
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.island-best-for {
+  font-size: 13px;
+  color: var(--text);
+  background: #fff8e7;
+  border-left: 3px solid var(--sand-dark);
+  padding: 8px 10px;
+  border-radius: 0 6px 6px 0;
+  line-height: 1.4;
+}
+
+.island-bf-label {
+  font-weight: 700;
+  color: var(--sand-dark);
+}
+
+.island-highlights {}
+
+.island-hl-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-light);
+  margin-bottom: 6px;
+}
+
+.island-hl-list {
+  padding-left: 16px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.island-hl-list li {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+
+.island-filter-btn {
+  width: 100%;
+  background: var(--navy);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: auto;
+}
+
+.island-filter-btn:hover { background: var(--sea); }
+
+/* ─── Sailing Tips ──────────────────────────────────────── */
+.sailing-tips {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+.st-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.st-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 900;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.st-subtitle {
+  color: var(--text-mid);
+  font-size: 15px;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 16px;
+}
+
+.tip-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  transition: box-shadow 0.2s;
+}
+
+.tip-card:hover { box-shadow: var(--shadow); }
+
+.tip-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.tip-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+
+.tip-body {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+
+/* ─── Empty State ───────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-mid);
+}
+
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+
+.empty-state p { margin-bottom: 16px; font-size: 15px; }
+
+.empty-state button {
+  background: var(--sea);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* ─── Footer ────────────────────────────────────────────── */
+.footer {
+  background: var(--navy);
+  padding: 24px 20px;
+  text-align: center;
+  margin-top: auto;
+}
+
+.footer-islands {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 24px;
+  margin-bottom: 10px;
+}
+
+.footer-island {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+}
+
+.footer-note {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ─── Responsive ────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .hero { padding: 40px 16px 64px; }
+
+  .hero-stats {
+    padding: 8px 16px;
+    gap: 16px;
+  }
+
+  .hs-num { font-size: 18px; }
+
+  .filter-group { flex-direction: column; align-items: flex-start; }
+
+  .filter-label { min-width: unset; }
+
+  .tips-grid { grid-template-columns: 1fr; }
+
+  .island-cards-grid { grid-template-columns: 1fr; }
+
+  .spots-grid { grid-template-columns: 1fr; }
+
+  .route-strip { padding: 10px 14px; }
+
+  .route-name { display: none; }
+
+  .map-section {
+    height: calc(100vh - 220px);
+    min-height: 360px;
+  }
+}
