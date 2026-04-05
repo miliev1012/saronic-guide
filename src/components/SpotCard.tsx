@@ -12,6 +12,11 @@ export default function SpotCard({ spot, isFavorite = false, onToggleFavorite, o
   const catMeta = CATEGORY_META[spot.category];
   const islMeta = ISLAND_META[spot.island];
 
+  const copyGPS = () => {
+    const text = `${spot.lat.toFixed(5)}, ${spot.lng.toFixed(5)}`;
+    navigator.clipboard?.writeText(text).catch(() => {});
+  };
+
   return (
     <div className="spot-card" style={{ '--cat-color': catMeta.color, '--cat-bg': catMeta.bg } as React.CSSProperties}>
       <div className="spot-card-header">
@@ -47,15 +52,22 @@ export default function SpotCard({ spot, isFavorite = false, onToggleFavorite, o
         </div>
       )}
 
-      {spot.tip && (
-        <div className="spot-tip">💡 {spot.tip}</div>
-      )}
+      {spot.tip && <div className="spot-tip">💡 {spot.tip}</div>}
 
       {(spot.depth || spot.bottom) && (
         <div className="spot-depth">
           {spot.anchor && <span>⚓</span>}
           {spot.depth && <span>{spot.depth} depth</span>}
           {spot.bottom && <span>· {spot.bottom}</span>}
+        </div>
+      )}
+
+      {/* Service badges */}
+      {(spot.cooksCatch || spot.fuel || spot.vhf) && (
+        <div className="spot-service-badges">
+          {spot.cooksCatch && <span className="service-badge cook">🍳 Cooks your catch</span>}
+          {spot.fuel && <span className="service-badge fuel">⛽ Fuel</span>}
+          {spot.vhf && <span className="service-badge vhf">📻 VHF {spot.vhf}</span>}
         </div>
       )}
 
@@ -75,14 +87,12 @@ export default function SpotCard({ spot, isFavorite = false, onToggleFavorite, o
       <div className="spot-footer">
         <div className="spot-tags">
           {spot.swim && <span className="spot-tag">🏊 Swimming</span>}
+          {spot.anchor && <span className="spot-tag">⚓ Anchorage</span>}
         </div>
-        <button
-          className="spot-map-btn"
-          onClick={() => onFocus && onFocus(spot)}
-          title="Show on map"
-        >
-          📍 Map
-        </button>
+        <div className="spot-footer-btns">
+          <button className="spot-gps-btn" onClick={copyGPS} title="Copy GPS coordinates">📋 GPS</button>
+          <button className="spot-map-btn" onClick={() => onFocus && onFocus(spot)} title="Show on map">📍 Map</button>
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -6,24 +6,35 @@ import { spots } from '../data/places';
 import { ISLAND_META, CATEGORY_META } from '../data/types';
 import type { Island, Category, Vibe, Spot } from '../data/types';
 
-function makeIcon(emoji: string, color: string) {
+function makeIcon(emoji: string, color: string, size = 34) {
   return L.divIcon({
     className: '',
     html: `<div style="
       background:${color};
       border:2.5px solid #fff;
       border-radius:50%;
-      width:34px;height:34px;
+      width:${size}px;height:${size}px;
       display:flex;align-items:center;justify-content:center;
-      font-size:16px;
+      font-size:${Math.round(size * 0.47)}px;
       box-shadow:0 2px 8px rgba(0,0,0,0.35);
       cursor:pointer;
     ">${emoji}</div>`,
-    iconSize: [34, 34],
-    iconAnchor: [17, 17],
-    popupAnchor: [0, -20],
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    popupAnchor: [0, -size / 2 - 4],
   });
 }
+
+const userIcon = L.divIcon({
+  className: '',
+  html: `<div style="
+    background:#0077b6;border:3px solid white;border-radius:50%;
+    width:18px;height:18px;
+    box-shadow:0 0 0 4px rgba(0,119,182,0.3);
+  "></div>`,
+  iconSize: [18, 18],
+  iconAnchor: [9, 9],
+});
 
 function BoundsAdjuster({ visible }: { visible: Spot[] }) {
   const map = useMap();
@@ -35,6 +46,15 @@ function BoundsAdjuster({ visible }: { visible: Spot[] }) {
   return null;
 }
 
+function FlyTo({ pos }: { pos: [number, number] | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!pos) return;
+    map.flyTo(pos, 14, { duration: 1.2 });
+  }, [pos, map]);
+  return null;
+}
+
 interface Props {
   activeIsland: Island | 'all';
   activeCategory: Category | 'all';
@@ -43,6 +63,10 @@ interface Props {
 }
 
 export default function MapPanel({ activeIsland, activeCategory, activeVibe = 'all', onSpotClick }: Props) {
+  const [userPos, setUserPos] = useState<[number, number] | null>(null);
+  const [flyTarget, setFlyTarget] = useState<[number, number] | null>(null);
+  const [locating, setLocating] = useState(false);
+
   const visible = spots.filter(s => {
     if (activeIsland !== 'all' && s.island !== activeIsland) return false;
     if (activeCategory !== 'all' && s.category !== activeCategory) return false;
@@ -54,8 +78,31 @@ export default function MapPanel({ activeIsland, activeCategory, activeVibe = 'a
     if (onSpotClick) onSpotClick(spot);
   }, [onSpotClick]);
 
+  const handleNearMe = useCallback(() => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const latlng: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+        setUserPos(latlng);
+        setFlyTarget(latlng);
+        setLocating(false);
+      },
+      () => setLocating(false),
+      { timeout: 8000 }
+    );
+  }, []);
+
   return (
     <div className="map-wrap">
+      <button
+        className={`map-nearme-btn${locating ? ' locating' : ''}`}
+        onClick={handleNearMe}
+        title="Show my position"
+      >
+        {locating ? '⏳' : '📍'} Near Me
+      </button>
+
       <MapContainer
         center={[37.45, 23.30]}
         zoom={10}
@@ -67,6 +114,14 @@ export default function MapPanel({ activeIsland, activeCategory, activeVibe = 'a
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
         <BoundsAdjuster visible={visible} />
+        <FlyTo pos={flyTarget} />
+
+        {userPos && (
+          <Marker position={userPos} icon={userIcon}>
+            <Popup><b>You are here</b></Popup>
+          </Marker>
+        )}
+
         {visible.map(spot => (
           <Marker
             key={spot.id}
@@ -91,9 +146,16 @@ export default function MapPanel({ activeIsland, activeCategory, activeVibe = 'a
                     </div>
                   )}
                   {spot.tip && <div className="popup-tip">💡 {spot.tip}</div>}
-                  {spot.depth && (
-                    <div className="popup-depth">⚓ {spot.depth} · {spot.bottom}</div>
+                  {spot.depth && <div className="popup-depth">⚓ {spot.depth} · {spot.bottom}</div>}
+
+                  {(spot.cooksCatch || spot.fuel || spot.vhf) && (
+                    <div className="popup-service-badges">
+                      {spot.cooksCatch && <span className="service-badge cook">🍳 Cooks catch</span>}
+                      {spot.fuel && <span className="service-badge fuel">⛽ Fuel</span>}
+                      {spot.vhf && <span className="service-badge vhf">📻 VHF {spot.vhf}</span>}
+                    </div>
                   )}
+
                   <div className="popup-tags">
                     {spot.anchor && <span className="popup-tag anchor">⚓ Anchorage</span>}
                     {spot.swim && <span className="popup-tag swim">🏊 Swimming</span>}
@@ -101,14 +163,24 @@ export default function MapPanel({ activeIsland, activeCategory, activeVibe = 'a
                       {CATEGORY_META[spot.category].emoji} {CATEGORY_META[spot.category].label}
                     </span>
                   </div>
-                  <a
-                    className="popup-maps-link"
-                    href={`https://www.google.com/maps/dir/?api=1&destination=${spot.lat},${spot.lng}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    📍 Directions
-                  </a>
+
+                  <div className="popup-bottom-row">
+                    <button
+                      className="popup-gps-btn"
+                      onClick={() => navigator.clipboard?.writeText(`${spot.lat.toFixed(5)}, ${spot.lng.toFixed(5)}`).catch(() => {})}
+                      title="Copy GPS coordinates"
+                    >
+                      📋 {spot.lat.toFixed(4)}°N {spot.lng.toFixed(4)}°E
+                    </button>
+                    <a
+                      className="popup-maps-link"
+                      href={`https://www.google.com/maps/dir/?api=1&destination=${spot.lat},${spot.lng}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      📍 Directions
+                    </a>
+                  </div>
                 </div>
               </div>
             </Popup>

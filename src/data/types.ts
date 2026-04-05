@@ -48,9 +48,12 @@ export interface Spot {
   mustTry?: string;
   anchor?: boolean;
   swim?: boolean;
-  depth?: string;    // e.g. "4–8m"
-  bottom?: string;   // e.g. "sandy, good holding"
+  depth?: string;      // e.g. "4–8m"
+  bottom?: string;     // e.g. "sandy, good holding"
   vibes?: Vibe[];
+  cooksCatch?: boolean; // taverna will cook your fish
+  fuel?: boolean;       // fuel available at marina
+  vhf?: string;         // VHF working channel
 }
 
 export const ISLAND_META: Record<Island, {

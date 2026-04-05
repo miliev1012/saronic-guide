@@ -1,6 +1,7 @@
 import type { Spot } from './types';
+import { extraSpots } from './places_extra';
 
-export const spots: Spot[] = [
+const baseSpots: Spot[] = [
   // ── PIRAEUS ──────────────────────────────────────────────────────────────
   {
     id: 'pir-marina',
@@ -9,6 +10,7 @@ export const spots: Spot[] = [
     lat: 37.9394, lng: 23.6470,
     desc: 'Main departure marina. Fill up on fuel, water and provisions before heading out.',
     tip: 'Supermarkets and chandleries a 5-min walk. Depart early to avoid traffic.',
+    fuel: true, vhf: '12',
     vibes: ['family'],
   },
   {
@@ -30,6 +32,7 @@ export const spots: Spot[] = [
     lat: 37.7477, lng: 23.4262,
     desc: 'Lively main port with plenty of berths. Ideal first-night stop — 1.5–2h from Piraeus.',
     tip: 'Moor stern-to the quay. Great morning market selling local pistachios.',
+    fuel: true, vhf: '12',
     vibes: ['family'],
   },
   {
@@ -60,6 +63,7 @@ export const spots: Spot[] = [
     desc: 'Tiny postcard-perfect fishing village on the south tip. Several excellent fish tavernas by the water.',
     mustTry: 'Boiled fish (psarosoupa) or anything fresh-grilled',
     tip: 'Anchor off the village — flat water, beautiful. Ask the taverna to cook your own catch!',
+    cooksCatch: true,
     anchor: true, swim: true,
     depth: '4–6m', bottom: 'Sandy/weed mix',
     vibes: ['romantic', 'sunset', 'fishing'],
@@ -109,6 +113,7 @@ export const spots: Spot[] = [
     lat: 37.7041, lng: 23.3361,
     desc: 'Angistri\'s main port — small and intimate. Moor here for the night and explore on foot.',
     tip: 'Very short hop from Aegina (~30 min). Great for day 2.',
+    fuel: false, vhf: '16',
     vibes: ['family'],
   },
   {
@@ -180,6 +185,7 @@ export const spots: Spot[] = [
     lat: 37.6369, lng: 23.3714,
     desc: 'Small port on the volcanic peninsula. A quiet, slightly off-the-beaten-path stop between Angistri and Poros.',
     tip: 'Fuel available. The town is very laid back — almost no tourists. Great provisions from the local market.',
+    fuel: true, vhf: '12',
     vibes: ['secluded'],
   },
   {
@@ -228,6 +234,7 @@ export const spots: Spot[] = [
     lat: 37.5018, lng: 23.4449,
     desc: 'Iconic neoclassical waterfront opposite the Peloponnese mainland. Moor stern-to the bustling quay.',
     tip: 'The narrow channel is stunning. Arrive afternoon for the light.',
+    fuel: true, vhf: '12',
     vibes: ['romantic', 'sunset'],
   },
   {
@@ -278,6 +285,7 @@ export const spots: Spot[] = [
     desc: 'Beloved fish taverna on the waterfront. Traditional, generous, honest prices.',
     mustTry: 'Shrimp saganaki and grilled swordfish',
     tip: 'Book ahead in summer or go early. Will cook your catch.',
+    cooksCatch: true,
     vibes: ['romantic'],
   },
   {
@@ -316,6 +324,7 @@ export const spots: Spot[] = [
     lat: 37.3483, lng: 23.4711,
     desc: 'One of the most beautiful harbours in Greece. Stone mansions, no cars, donkeys. UNESCO treasure.',
     tip: 'Mooring buoys available. Crowded in peak season — arrive by 3pm.',
+    fuel: false, vhf: '12',
     vibes: ['romantic', 'sunset'],
   },
   {
@@ -359,6 +368,7 @@ export const spots: Spot[] = [
     desc: 'Simple, no-frills taverna tucked in an alley above the harbour. Locals eat here. Huge portions.',
     mustTry: 'Braised lamb and village salad',
     tip: 'Walk up stone steps from the quay, turn left. No sign — ask locals.',
+    cooksCatch: true,
     vibes: ['romantic'],
   },
   {
@@ -466,6 +476,7 @@ export const spots: Spot[] = [
     lat: 37.2617, lng: 23.1561,
     desc: 'Main quay lined with cafés, restaurants and horse-drawn carriages (no cars here either).',
     tip: 'Fuel and water available. Good provisions from the market nearby.',
+    fuel: true, vhf: '12',
     vibes: ['family'],
   },
   {
@@ -508,6 +519,7 @@ export const spots: Spot[] = [
     desc: 'Legendary fish taverna at the old harbour. Been here for generations. No frills, just perfect seafood.',
     mustTry: 'Grilled whole sea bass and salted anchovies',
     tip: 'Go for lunch — evening gets very busy. Will cook your catch.',
+    cooksCatch: true,
     vibes: ['romantic', 'sunset'],
   },
   {
@@ -604,6 +616,7 @@ export const spots: Spot[] = [
     lat: 37.3221, lng: 23.1519,
     desc: 'One of the best-equipped marinas on the Peloponnese coast. Excellent facilities, fuel, water, good provisions. Popular final stop before heading back to Piraeus.',
     tip: 'Plenty of berths. The bay is very protected. Supermarket 5 min walk from the dock.',
+    fuel: true, vhf: '12',
     vibes: ['family', 'protected'],
   },
   {
@@ -635,3 +648,5 @@ export const spots: Spot[] = [
     vibes: ['fishing', 'family'],
   },
 ];
+
+export const spots: Spot[] = [...baseSpots, ...extraSpots];
